@@ -16,3 +16,23 @@ go get github.com/cesarvspr/brmarket@V1.0.0
 import "go get github.com/cesarvspr/brmarket"
 ```
 
+- ### main.go
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/cesarvspr/brmarket"
+)
+
+func main() {
+	text, err := brmarket.GetSharesForIndex("IOV")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	fmt.Println(text)
+}
+
+```

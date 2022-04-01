@@ -1,8 +1,5 @@
 # brmarket
 Package to get indexes info from B3
-# Models TCStreamsCollector
-
-## Models used on Price Feeds projects
 
 ### Import
 

@@ -24,8 +24,8 @@ import (
 )
 
 func main() {
-	text, _ := brmarket.GetSharesForIndex("IBOV")
-	fmt.Println(text)
+	data, _ := brmarket.GetSharesForIndex("IBOV")
+	fmt.Println(data.UnderlyingList)
 }
 
 ```

@@ -24,11 +24,7 @@ import (
 )
 
 func main() {
-	text, err := brmarket.GetSharesForIndex("IOV")
-	if err != nil {
-		fmt.Println(err)
-		panic(err)
-	}
+	text, _ := brmarket.GetSharesForIndex("IBOV")
 	fmt.Println(text)
 }
 

@@ -3,10 +3,36 @@ package brmarket
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
+var (
+	IBOV = "IBOV"
+	IBXX = "IBXX"
+	IBXL = "IBXL"
+	IBRA = "IBRA"
+	IGCX = "IGCX"
+	ITAG = "ITAG"
+	IGNM = "IGNM"
+	IGCT = "IGCT"
+	IDIV = "IDIV"
+	MLCX = "MLCX"
+	IVBX = "IVBX"
+	ICO2 = "ICO2"
+	ISEE = "ISEE"
+	ICON = "ICON"
+	IEEX = "IEEX"
+	IFNC = "IFNC"
+	IMOB = "IMOB"
+	INDX = "INDX"
+	IMAT = "IMAT"
+	UTIL = "UTIL"
+	IFIX = "IFIX"
+	BDRX = "BDRX"
+)
+
+// Response type for B3 API
 type B3IndexInfo struct {
 	BizSts         bizSts           `json:"BizSts"`
 	Index          index            `json:"Index"`
@@ -30,6 +56,8 @@ type msg struct {
 	DtTm string `json:"dtTm"`
 }
 
+// Return shares for reach index, only Brazilian indexes allowed.
+// Example: GetSharesForIndex("IBOV") or GetSharesForIndex(brmarket.IBOV)
 func GetSharesForIndex(index string) (B3IndexInfo, error) {
 	mapIndexName := map[string]string{
 		"IBOV": "IBOV",
@@ -57,18 +85,18 @@ func GetSharesForIndex(index string) (B3IndexInfo, error) {
 	}
 
 	if _, ok := mapIndexName[index]; !ok {
-		return B3IndexInfo{}, fmt.Errorf("Index %s not found", index)
+		return B3IndexInfo{}, fmt.Errorf("index %s not found", index)
 	}
 
 	URL := "https://cotacao.b3.com.br/mds/api/v1/IndexComposition/" + index
 	resp, err := http.Get(URL)
 	if err != nil {
-		fmt.Errorf(fmt.Sprintf("Error when loading data from B3 %+v", err))
 		return B3IndexInfo{}, err
 	}
+	defer resp.Body.Close()
 
 	//Read the response body
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return B3IndexInfo{}, err
 	}

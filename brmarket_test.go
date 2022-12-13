@@ -1,6 +1,7 @@
 package brmarket
 
 import (
+	"errors"
 	"testing"
 )
 
@@ -21,5 +22,12 @@ func TestIBXXIndex(t *testing.T) {
 	}
 	if data.Index.Symbol != "IBXX" {
 		t.Fatalf("Expected IBXX, got %s", data.Index.Symbol)
+	}
+}
+
+func TestErrorOnUnknownIndex(t *testing.T) {
+	_, err := GetSharesForIndex("unknown")
+	if !errors.Is(err, ErrIndexNotFound) {
+		t.Fatalf("Unexpected error: %v", err)
 	}
 }

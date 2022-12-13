@@ -2,7 +2,7 @@ package brmarket
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 )
@@ -56,6 +56,9 @@ type msg struct {
 	DtTm string `json:"dtTm"`
 }
 
+// ErrIndexNotFound is used for all indexes not supported
+var ErrIndexNotFound error = errors.New("index not found")
+
 // Return shares for reach index, only Brazilian indexes allowed.
 // Example: GetSharesForIndex("IBOV") or GetSharesForIndex(brmarket.IBOV)
 func GetSharesForIndex(index string) (B3IndexInfo, error) {
@@ -85,7 +88,7 @@ func GetSharesForIndex(index string) (B3IndexInfo, error) {
 	}
 
 	if _, ok := mapIndexName[index]; !ok {
-		return B3IndexInfo{}, fmt.Errorf("index %s not found", index)
+		return B3IndexInfo{}, ErrIndexNotFound
 	}
 
 	URL := "https://cotacao.b3.com.br/mds/api/v1/IndexComposition/" + index

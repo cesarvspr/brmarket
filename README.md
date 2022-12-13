@@ -1,4 +1,5 @@
 # brmarket
+
 Package to get indexes info from B3
 
 ### Import
@@ -12,43 +13,46 @@ go get github.com/cesarvspr/brmarket@V1.0.0
 ```go
 import "go get github.com/cesarvspr/brmarket"
 ```
-#### Indexes available:
 
-		IBOV
-		IBXX
-		IBXL
-		IBRA
-		IGCX
-		ITAG
-		IGNM
-		IGCT
-		IDIV
-		MLCX
-		IVBX
-		ICO2
-		ISEE
-		ICON
-		IEEX
-		IFNC
-		IMOB
-		INDX
-		IMAT
-		UTIL
-		IFIX
-		BDRX
+#### Indexes available
+
+  IBOV
+  IBXX
+  IBXL
+  IBRA
+  IGCX
+  ITAG
+  IGNM
+  IGCT
+  IDIV
+  MLCX
+  IVBX
+  ICO2
+  ISEE
+  ICON
+  IEEX
+  IFNC
+  IMOB
+  INDX
+  IMAT
+  UTIL
+  IFIX
+  BDRX
+
 - ### main.go
+
 ```go
 package main
 
 import (
-	"fmt"
+ "fmt"
 
-	"github.com/cesarvspr/brmarket"
+ "github.com/cesarvspr/brmarket"
 )
 
 func main() {
-	data, _ := brmarket.GetSharesForIndex("IBOV")
-	fmt.Println(data.UnderlyingList)
+ data, _ := brmarket.GetSharesForIndex(brmarket.IBOV)
+ fmt.Println(data.UnderlyingList)
 }
 
 ```

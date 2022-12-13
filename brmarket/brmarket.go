@@ -8,25 +8,25 @@ import (
 )
 
 type B3IndexInfo struct {
-	BizSts         BizSts           `json:"BizSts"`
-	Index          Index            `json:"Index"`
-	UnderlyingList []UnderlyingList `json:"UnderlyingList"`
-	Msg            Msg              `json:"Msg"`
+	BizSts         bizSts           `json:"BizSts"`
+	Index          index            `json:"Index"`
+	UnderlyingList []underlyingList `json:"UnderlyingList"`
+	Msg            msg              `json:"Msg"`
 }
-type BizSts struct {
+type bizSts struct {
 	Cd string `json:"cd"`
 }
-type Index struct {
+type index struct {
 	Symbol      string `json:"symbol"`
 	Description string `json:"description"`
 }
-type UnderlyingList struct {
+type underlyingList struct {
 	IndexTheoreticalQty float64 `json:"indexTheoreticalQty"`
 	IndxCmpnPctg        float64 `json:"indxCmpnPctg"`
 	Symb                string  `json:"symb"`
 	Desc                string  `json:"desc"`
 }
-type Msg struct {
+type msg struct {
 	DtTm string `json:"dtTm"`
 }
 
@@ -70,12 +70,10 @@ func GetSharesForIndex(index string) (B3IndexInfo, error) {
 	//Read the response body
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Errorf(string(err.Error()))
 		return B3IndexInfo{}, err
 	}
 	var info B3IndexInfo
 	if err := json.Unmarshal(data, &info); err != nil {
-		fmt.Errorf(string(err.Error()))
 		return info, err
 	}
 

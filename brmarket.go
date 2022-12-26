@@ -7,29 +7,31 @@ import (
 	"net/http"
 )
 
-var (
-	IBOV = "IBOV"
-	IBXX = "IBXX"
-	IBXL = "IBXL"
-	IBRA = "IBRA"
-	IGCX = "IGCX"
-	ITAG = "ITAG"
-	IGNM = "IGNM"
-	IGCT = "IGCT"
-	IDIV = "IDIV"
-	MLCX = "MLCX"
-	IVBX = "IVBX"
-	ICO2 = "ICO2"
-	ISEE = "ISEE"
-	ICON = "ICON"
-	IEEX = "IEEX"
-	IFNC = "IFNC"
-	IMOB = "IMOB"
-	INDX = "INDX"
-	IMAT = "IMAT"
-	UTIL = "UTIL"
-	IFIX = "IFIX"
-	BDRX = "BDRX"
+type IndexType int
+
+const (
+	IBOV IndexType = iota
+	IBXX
+	IBXL
+	IBRA
+	IGCX
+	ITAG
+	IGNM
+	IGCT
+	IDIV
+	MLCX
+	IVBX
+	ICO2
+	ISEE
+	ICON
+	IEEX
+	IFNC
+	IMOB
+	INDX
+	IMAT
+	UTIL
+	IFIX
+	BDRX
 )
 
 // Response type for B3 API
@@ -39,59 +41,80 @@ type B3IndexInfo struct {
 	UnderlyingList []underlyingList `json:"UnderlyingList"`
 	Msg            msg              `json:"Msg"`
 }
+
 type bizSts struct {
 	Cd string `json:"cd"`
 }
+
 type index struct {
 	Symbol      string `json:"symbol"`
 	Description string `json:"description"`
 }
+
 type underlyingList struct {
 	IndexTheoreticalQty float64 `json:"indexTheoreticalQty"`
 	IndxCmpnPctg        float64 `json:"indxCmpnPctg"`
 	Symb                string  `json:"symb"`
 	Desc                string  `json:"desc"`
 }
+
 type msg struct {
 	DtTm string `json:"dtTm"`
 }
 
-// ErrIndexNotFound is used for all indexes not supported
-var ErrIndexNotFound error = errors.New("index not found")
+// Errors
+var (
+	// ErrIndexNotFound is used for all indexes not supported
+	ErrIndexNotFound = errors.New("index not found")
+)
+
+func (i IndexType) String() string {
+	return [...]string{
+		"IBOV",
+		"IBXX",
+		"IBXL",
+		"IBRA",
+		"IGCX",
+		"ITAG",
+		"IGNM",
+		"IGCT",
+		"IDIV",
+		"MLCX",
+		"IVBX",
+		"ICO2",
+		"ISEE",
+		"ICON",
+		"IEEX",
+		"IFNC",
+		"IMOB",
+		"INDX",
+		"IMAT",
+		"UTIL",
+		"IFIX",
+		"BDRX",
+	}[i]
+}
+
+func IndexFromString(input string) (*IndexType, error) {
+	for i := IBOV; i <= BDRX; i++ {
+		if i.String() == input {
+			return &i, nil
+		}
+	}
+
+	return nil, ErrIndexNotFound
+}
 
 // Return shares for reach index, only Brazilian indexes allowed.
-// Example: GetSharesForIndex("IBOV") or GetSharesForIndex(brmarket.IBOV)
+// Example: GetSharesForIndex("IBOV") or GetSharesForIndex(brmarket.IBOV.String())
 func GetSharesForIndex(index string) (B3IndexInfo, error) {
-	mapIndexName := map[string]string{
-		"IBOV": "IBOV",
-		"IBXX": "IBXX",
-		"IBXL": "IBXL",
-		"IBRA": "IBRA",
-		"IGCX": "IGCX",
-		"ITAG": "ITAG",
-		"IGNM": "IGNM",
-		"IGCT": "IGCT",
-		"IDIV": "IDIV",
-		"MLCX": "MLCX",
-		"IVBX": "IVBX",
-		"ICO2": "ICO2",
-		"ISEE": "ISEE",
-		"ICON": "ICON",
-		"IEEX": "IEEX",
-		"IFNC": "IFNC",
-		"IMOB": "IMOB",
-		"INDX": "INDX",
-		"IMAT": "IMAT",
-		"UTIL": "UTIL",
-		"IFIX": "IFIX",
-		"BDRX": "BDRX",
+
+	idx, indexErr := IndexFromString(index)
+	if indexErr != nil {
+		return B3IndexInfo{}, indexErr
 	}
 
-	if _, ok := mapIndexName[index]; !ok {
-		return B3IndexInfo{}, ErrIndexNotFound
-	}
-
-	URL := "https://cotacao.b3.com.br/mds/api/v1/IndexComposition/" + index
+	URL := "https://cotacao.b3.com.br/mds/api/v1/IndexComposition/" + idx.String()
 	resp, err := http.Get(URL)
 	if err != nil {
 		return B3IndexInfo{}, err

@@ -16,7 +16,7 @@ func TestIbovIndex(t *testing.T) {
 }
 
 func TestIBXXIndex(t *testing.T) {
-	data, err := GetSharesForIndex(IBXX)
+	data, err := GetSharesForIndex(IBXX.String())
 	if err != nil {
 		t.Fatalf("Unexpected error: %v", err)
 	}
